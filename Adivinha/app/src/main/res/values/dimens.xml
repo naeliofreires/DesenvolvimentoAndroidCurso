@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="cabecalho_texto">20sp</dimen>
+    <dimen name="W_btn_jogar">270dp</dimen>
+    <dimen name="H_bton_jogar">40dp</dimen>
+</resources>
