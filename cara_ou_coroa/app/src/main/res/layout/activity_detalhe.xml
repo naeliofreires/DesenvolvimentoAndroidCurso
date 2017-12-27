@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.naelio.cara_ou_coroa.DetalheActivity">
+
+    <RelativeLayout
+        android:id="@+id/LayoutPrincipal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#61BD8C">
+
+        <ImageView
+            android:id="@+id/imagemMoeda"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="21dp"
+            />
+
+        <ImageView
+            android:id="@+id/buttonVoltar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imagemMoeda"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="46dp"
+            app:srcCompat="@drawable/botao_voltar" />
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>
