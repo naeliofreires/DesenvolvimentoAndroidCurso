@@ -6,9 +6,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
@@ -17,6 +21,8 @@ public class MainActivity extends Activity {
     private EditText editTextNewTask;
 
     private SQLiteDatabase database;
+    private ArrayAdapter<String> tasksAdapter;
+    private ArrayList<String> tasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +32,6 @@ public class MainActivity extends Activity {
         try {
             // recuperando componentes
             buttonSave = findViewById(R.id.buttonSaveID);
-            listViewTasks = findViewById(R.id.listViewTasksID);
             editTextNewTask = findViewById(R.id.editTextNewTaskID);
 
             // iniciando banco de dados
@@ -39,28 +44,65 @@ public class MainActivity extends Activity {
             buttonSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    String text = editTextNewTask.getText().toString();
-                    database.execSQL("INSERT INTO tasks (name) VALUES('" + text + "')");
+                    saveTask(editTextNewTask.getText().toString());
+                    editTextNewTask.setText("");
                 }
             });
 
-            // recuperando as tarefas
-            Cursor cursor = database.rawQuery("SELECT * FROM tasks", null);
-
-            // recuperando os ids das colunas
-            int indeceCollunID = cursor.getColumnIndex("id");
-            int indeceCollunTask = cursor.getColumnIndex("name");
-
-            cursor.moveToFirst();
-            // listando tarefas
-            while (cursor != null) {
-                Log.i("Resultado - ", "Tarefa: " + cursor.getString(indeceCollunTask));
-                cursor.moveToNext();
-            }
+            loadTaks();
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
+
+    private void saveTask(String text) {
+        try {
+            if (text.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "field task is empty", Toast.LENGTH_SHORT).show();
+            } else {
+                database.execSQL("INSERT INTO tasks (name) VALUES('" + text + "')");
+                Toast.makeText(getApplicationContext(), "save with success", Toast.LENGTH_SHORT).show();
+                loadTaks();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void loadTaks() {
+        try {
+            // recuperando as tarefas
+            Cursor cursor = database.rawQuery("SELECT * FROM tasks ORDER BY id DESC", null);
+
+            // recuperando os ids das colunas
+            int indeceCollunID = cursor.getColumnIndex("id");
+            int indeceCollunTask = cursor.getColumnIndex("name");
+
+            // my list
+            listViewTasks = findViewById(R.id.listViewTasksID);
+
+            // create adapter
+            tasks = new ArrayList<>();
+            tasksAdapter = new ArrayAdapter<>(
+                    getApplicationContext(),
+                    android.R.layout.simple_list_item_1,
+                    android.R.id.text1,
+                    tasks
+            );
+
+            listViewTasks.setAdapter(tasksAdapter);
+
+            // listing tasks
+            cursor.moveToFirst();
+            while (cursor != null) {
+                Log.i("Result - ", "Task: " + cursor.getString(indeceCollunTask));
+                tasks.add(cursor.getString(indeceCollunTask));
+                cursor.moveToNext();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
